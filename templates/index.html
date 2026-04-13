@@ -11,9 +11,16 @@
         <h1>🔗 اختصر رابطك</h1>
         <p class="subtitle">أدخل الرابط الطويل للحصول على رابط مختصر</p>
         
-        <div class="input-group">
+        <div class="input-group main-input">
             <input type="url" id="urlInput" placeholder="https://example.com/very-long-url..." required>
             <button onclick="shortenUrl()">اختصر</button>
+        </div>
+        
+        <div class="custom-section">
+            <label>
+                <input type="checkbox" id="useCustom" onchange="toggleCustom()"> استخدام رابط مخصص
+            </label>
+            <input type="text" id="customCode" class="hidden" placeholder="أدخل الرابط المخصص (اختياري)">
         </div>
         
         <div id="result" class="result hidden">

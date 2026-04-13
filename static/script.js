@@ -1,7 +1,19 @@
+function toggleCustom() {
+    const checkbox = document.getElementById('useCustom');
+    const customInput = document.getElementById('customCode');
+    if (checkbox.checked) {
+        customInput.classList.remove('hidden');
+    } else {
+        customInput.classList.add('hidden');
+    }
+}
+
 async function shortenUrl() {
     const urlInput = document.getElementById('urlInput');
     const resultDiv = document.getElementById('result');
     const shortUrlInput = document.getElementById('shortUrl');
+    const useCustom = document.getElementById('useCustom').checked;
+    const customCode = document.getElementById('customCode').value.trim();
     const originalUrl = urlInput.value.trim();
 
     if (!originalUrl) {
@@ -9,11 +21,16 @@ async function shortenUrl() {
         return;
     }
 
+    const payload = { url: originalUrl };
+    if (useCustom && customCode) {
+        payload.custom_code = customCode;
+    }
+
     try {
         const response = await fetch('/shorten', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ url: originalUrl })
+            body: JSON.stringify(payload)
         });
 
         const data = await response.json();

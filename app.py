@@ -21,17 +21,23 @@ def index():
 def shorten_url():
     data = request.get_json()
     original_url = data.get('url')
+    custom_code = data.get('custom_code')
     
     if not original_url:
         return jsonify({'error': 'URL is required'}), 400
     
-    short_code = generate_short_code()
-    
-    while True:
-        existing = supabase.table('urls').select('*').eq('short_code', short_code).execute()
-        if not existing.data:
-            break
+    if custom_code:
+        existing = supabase.table('urls').select('*').eq('short_code', custom_code).execute()
+        if existing.data:
+            return jsonify({'error': 'هذا الرابط مستخدم من قبل'}), 400
+        short_code = custom_code
+    else:
         short_code = generate_short_code()
+        while True:
+            existing = supabase.table('urls').select('*').eq('short_code', short_code).execute()
+            if not existing.data:
+                break
+            short_code = generate_short_code()
     
     result = supabase.table('urls').insert({
         'original_url': original_url,
